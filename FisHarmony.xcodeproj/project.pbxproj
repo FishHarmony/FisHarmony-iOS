@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7322FD9F0FF9ECA40E7C396C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		BA0CD08D1B244F1600B14964 /* MyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */; };
+		BA0CD08F1B2458AC00B14964 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BA0CD08E1B2458AC00B14964 /* Settings.bundle */; };
 		BAAE148E1B23DB4600F0449D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAAE148D1B23DB4600F0449D /* Foundation.framework */; };
 		BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558231B22A17900389A9D /* AppDelegate.swift */; };
 		BAD558261B22A17900389A9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558251B22A17900389A9D /* ViewController.swift */; };
@@ -30,6 +32,8 @@
 /* Begin PBXFileReference section */
 		153FEFC76316E51F4D491BEB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAnnotation.swift; sourceTree = "<group>"; };
+		BA0CD08E1B2458AC00B14964 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		BAAE148D1B23DB4600F0449D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BAD5581E1B22A17900389A9D /* FisHarmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FisHarmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAD558221B22A17900389A9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 				BAD5582A1B22A17900389A9D /* Images.xcassets */,
 				BAD5582C1B22A17900389A9D /* LaunchScreen.xib */,
 				BAD558211B22A17900389A9D /* Supporting Files */,
+				BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */,
 			);
 			path = FisHarmony;
 			sourceTree = "<group>";
@@ -109,6 +114,7 @@
 		BAD558211B22A17900389A9D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BA0CD08E1B2458AC00B14964 /* Settings.bundle */,
 				BAD558221B22A17900389A9D /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -223,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA0CD08F1B2458AC00B14964 /* Settings.bundle in Resources */,
 				BAD558291B22A17900389A9D /* Main.storyboard in Resources */,
 				BAD5582E1B22A17900389A9D /* LaunchScreen.xib in Resources */,
 				BAD5582B1B22A17900389A9D /* Images.xcassets in Resources */,
@@ -293,6 +300,7 @@
 			files = (
 				BAD558261B22A17900389A9D /* ViewController.swift in Sources */,
 				BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */,
+				BA0CD08D1B244F1600B14964 /* MyAnnotation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

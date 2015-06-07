@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="CRJ-Un-Xik">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Table View Controller-->
+        <scene sceneID="hXB-6w-Qge">
+            <objects>
+                <tableViewController id="Z5s-lK-kxf" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="4bQ-wx-AvK">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="vCF-Wg-RfN">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vCF-Wg-RfN" id="gNp-s3-4iM">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Z5s-lK-kxf" id="7KZ-ay-RwK"/>
+                            <outlet property="delegate" destination="Z5s-lK-kxf" id="H8M-F7-DJq"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JJ7-DD-G7x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-422" y="307"/>
+        </scene>
+        <!--Snap a Photo-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FisHarmony" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,36 +43,110 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dgC-5B-4Aq">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="542"/>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dgC-5B-4Aq">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dMV-8L-U3C">
-                                <rect key="frame" x="283" y="550" width="34" height="30"/>
-                                <state key="normal" title="snap">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="brG-Fo-L9j" customClass="PopUp" customModule="FisHarmony" customModuleProvider="target">
+                                <rect key="frame" x="150" y="150" width="300" height="300"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Take a picture to report illegal activity. When you get back to shore, open this app again. That's it... Really." lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TDI-H9-9ar">
+                                        <rect key="frame" x="37" y="15" width="227" height="177"/>
+                                        <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="20"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EXZ-XH-Vyz">
+                                        <rect key="frame" x="8" y="247" width="284" height="45"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="GpY-CS-sdF"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="18"/>
+                                        <state key="normal" title="Got It">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closePopUp:" destination="brG-Fo-L9j" eventType="touchUpInside" id="ERI-zN-LoU"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.18823529411764706" green="0.7686274509803922" blue="0.78823529411764703" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="TDI-H9-9ar" secondAttribute="trailing" constant="36" id="CHI-80-c2F"/>
+                                    <constraint firstAttribute="width" constant="300" id="FyF-kg-cdd"/>
+                                    <constraint firstAttribute="centerX" secondItem="TDI-H9-9ar" secondAttribute="centerX" id="Qbe-7w-EAY"/>
+                                    <constraint firstAttribute="bottom" secondItem="EXZ-XH-Vyz" secondAttribute="bottom" constant="8" id="ZBj-hX-JRF"/>
+                                    <constraint firstAttribute="height" constant="300" id="dfu-WA-fgs"/>
+                                    <constraint firstItem="TDI-H9-9ar" firstAttribute="leading" secondItem="brG-Fo-L9j" secondAttribute="leading" constant="37" id="dg6-Fn-Ymx"/>
+                                    <constraint firstItem="TDI-H9-9ar" firstAttribute="top" secondItem="brG-Fo-L9j" secondAttribute="top" constant="15" id="ilO-66-lFD"/>
+                                    <constraint firstAttribute="trailing" secondItem="EXZ-XH-Vyz" secondAttribute="trailing" constant="8" id="lTw-5H-pbo"/>
+                                    <constraint firstItem="EXZ-XH-Vyz" firstAttribute="leading" secondItem="brG-Fo-L9j" secondAttribute="leading" constant="8" id="sZH-Ml-AH9"/>
+                                </constraints>
                                 <connections>
-                                    <action selector="takePhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Uwd-Np-jrb"/>
+                                    <outlet property="gotItButton" destination="EXZ-XH-Vyz" id="gvs-Hp-UDs"/>
+                                    <outlet property="textLabel" destination="TDI-H9-9ar" id="HDI-Se-6qk"/>
                                 </connections>
-                            </button>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="dgC-5B-4Aq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="3B7-v3-ddY"/>
+                            <constraint firstAttribute="centerY" secondItem="brG-Fo-L9j" secondAttribute="centerY" id="5lK-Vz-whF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dgC-5B-4Aq" secondAttribute="trailing" constant="-16" id="AKD-hX-doA"/>
-                            <constraint firstItem="dMV-8L-U3C" firstAttribute="top" secondItem="dgC-5B-4Aq" secondAttribute="bottom" constant="8" id="afR-Wb-1dW"/>
-                            <constraint firstAttribute="centerX" secondItem="dMV-8L-U3C" secondAttribute="centerX" id="oUQ-aA-DZc"/>
+                            <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="R2j-RS-lfB"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dgC-5B-4Aq" secondAttribute="bottom" id="YAd-oy-eyU"/>
+                            <constraint firstAttribute="centerX" secondItem="brG-Fo-L9j" secondAttribute="centerX" id="dNA-Sq-qGJ"/>
                             <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="omC-hM-cVc"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dMV-8L-U3C" secondAttribute="bottom" constant="20" id="sMy-3y-uVX"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="omC-hM-cVc"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <navigationItem key="navigationItem" title="Snap a Photo" id="cg5-Zc-Isl">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" style="done" id="Ib4-wL-YXc">
+                            <color key="tintColor" red="0.63921568627450975" green="0.72156862745098038" blue="0.031372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="camera" id="F4G-zH-3Rs">
+                            <color key="tintColor" red="0.82352941180000006" green="0.12549019610000001" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="takePhoto:" destination="BYZ-38-t0r" id="Hyg-VF-tLg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
-                        <outlet property="imageView" destination="dgC-5B-4Aq" id="0oJ-TD-dyX"/>
-                        <outlet property="takePhotoButton" destination="dMV-8L-U3C" id="sjf-UM-zZh"/>
+                        <outlet property="explainerPopUp" destination="brG-Fo-L9j" id="7ZN-JV-o19"/>
+                        <outlet property="imageView" destination="dgC-5B-4Aq" id="2ca-Vr-RsL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1276" y="316"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="WaX-yO-r0g">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="CRJ-Un-Xik" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="iFL-Of-ahY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1137254902" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.1019607843" green="0.1019607843" blue="0.1137254902" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="PPP-uh-nPw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pTC-xm-u4U" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="464" y="316"/>
         </scene>
     </scenes>
 </document>

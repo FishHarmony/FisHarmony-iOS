@@ -79,6 +79,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let fileName = "illegalActivity.jpg"
         
+        
         Photo.upload(chosenImage, filename: fileName).progress {
             (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
                 println(totalBytesWritten)
@@ -117,8 +118,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 class Photo {
     class func upload(image: UIImage, filename: String) -> Request {
-        let bin = "http://requestb.in/1fmv23g1"
-        var request: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: bin)!)
+        let bin = "http://requestb.in/18qq1gn1"
+        let route = Router.Upload(fieldName: "image", fileName: "illegalShit.jpeg", mimeType: "image/jpeg", fileContents: UIImageJPEGRepresentation(image, 1), boundaryConstant: "\(arc4random())")
+        var request = route.URLRequest.mutableCopy() as! NSMutableURLRequest
         let mimeType = "image/jpeg"
         let name = "image"
 //        var bodyData = "fileName=\(filename)&mimeType=\(mimeType)&name=\(name)"
@@ -137,6 +139,60 @@ class Photo {
         parameters.appendData(UIImageJPEGRepresentation(image, 1))
         parameters.appendData("\r\n--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         return Alamofire.upload(request, parameters)
+    }
+}
+
+public enum Router:URLRequestConvertible {
+    case Upload(fieldName: String, fileName: String, mimeType: String, fileContents: NSData, boundaryConstant:String);
+    
+    var method: Alamofire.Method {
+        switch self {
+        case Upload:
+            return .POST
+        default:
+            return .GET
+        }
+    }
+    
+    var path: String {
+        switch self {
+        case Upload:
+            return "/testupload.php"
+        default:
+            return "/"
+        }
+    }
+    
+    public var URLRequest: NSURLRequest {
+        var URL: NSURL = NSURL(string: "http://requestb.in/18qq1gn1")!
+        var mutableURLRequest = NSMutableURLRequest(URL: URL.URLByAppendingPathComponent(path))
+        mutableURLRequest.HTTPMethod = method.rawValue
+        
+        switch self {
+        case .Upload(let fieldName, let fileName, let mimeType, let fileContents, let boundaryConstant):
+            let contentType = "multipart/form-data; boundary=" + boundaryConstant
+            var error: NSError?
+            let boundaryStart = "--\(boundaryConstant)\r\n"
+            let boundaryEnd = "--\(boundaryConstant)--\r\n"
+            let contentDispositionString = "Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(fileName)\"\r\n"
+            let contentTypeString = "Content-Type: \(mimeType)\r\n\r\n"
+            
+            // Prepare the HTTPBody for the request.
+            let requestBodyData : NSMutableData = NSMutableData()
+            requestBodyData.appendData(boundaryStart.dataUsingEncoding(NSUTF8StringEncoding)!)
+            requestBodyData.appendData(contentDispositionString.dataUsingEncoding(NSUTF8StringEncoding)!)
+            requestBodyData.appendData(contentTypeString.dataUsingEncoding(NSUTF8StringEncoding)!)
+            requestBodyData.appendData(fileContents)
+            requestBodyData.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+            requestBodyData.appendData(boundaryEnd.dataUsingEncoding(NSUTF8StringEncoding)!)
+            
+            mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
+            mutableURLRequest.HTTPBody = requestBodyData
+            return Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0
+            
+        default:
+            return mutableURLRequest
+        }
     }
 }
 

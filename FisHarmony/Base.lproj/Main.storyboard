@@ -31,7 +31,7 @@
             </objects>
             <point key="canvasLocation" x="-422" y="307"/>
         </scene>
-        <!--Snap a Photo-->
+        <!--FisHarmony-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FisHarmony" customModuleProvider="target" sceneMemberID="viewController">
@@ -105,7 +105,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Snap a Photo" id="cg5-Zc-Isl">
+                    <navigationItem key="navigationItem" title="FisHarmony" id="cg5-Zc-Isl">
                         <barButtonItem key="leftBarButtonItem" title="Menu" style="done" id="Ib4-wL-YXc">
                             <color key="tintColor" red="0.63921568627450975" green="0.72156862745098038" blue="0.031372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </barButtonItem>

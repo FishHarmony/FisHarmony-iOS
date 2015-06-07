@@ -14,6 +14,17 @@ import Alamofire
 import MapboxGL
 import CoreLocation
 
+/**
+"ship_name" : null,
+"id" : 6,
+"notes" : "dasdada",
+"image" : "https:\/\/fisharmony.blob.core.windows.net\/image\/thumb\/55163dd9746ba7feb05e81c0d210dc47.jpg",
+"geolocation" : {
+"longitude" : "-118.195566",
+"latitude" : "33.767288"
+}
+**/
+
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate, MGLMapViewDelegate {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var explainerPopUp: PopUp!
@@ -23,6 +34,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private var mapView: MGLMapView?
     private var explained: Bool = false
     
+    
+
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         switch (annotation as! MyAnnotation).type! {
         case .Me:
@@ -42,36 +55,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         self.explainerPopUp.hidden = false
         
-        mapView = MGLMapView(frame: view.frame)
-        mapView?.accessToken = "pk.eyJ1IjoibWxhbmciLCJhIjoiYzliMjU3NTdiNTg1MGZlZjg1ODU1MjNlMGI3N2E5M2UifQ.PCxqsYuSx1a4bSeVp6pmnA"
+        mapView = MGLMapView(frame: view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         explainerPopUp.setUp()
-        var findMe: UIImageView = UIImageView(frame: CGRectMake(UIScreen.mainScreen().bounds.width - 30, UIScreen.mainScreen().bounds.height - 30, 20, 20))
-        
-//        findMe.image = UIImage(named: "findMe")
-//        findMe.layer.cornerRadius = 5.0
-//        let gr = UIGestureRecognizer(target: self, action: "findMe")
-//        findMe.addGestureRecognizer(gr)
-//        self.view.addSubview(findMe)
-//        findMe.bringSubviewToFront(self.mapView!)
-//        findMe.setNeedsDisplay()
-        
+
+        mapView!.delegate = self
+
         mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         // set the map's center coordinate
         // long beach: 33.7717 N, 118.1934 W
-        mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:33.7717, longitude:-118.1934), zoomLevel: 15, animated:false)
         view.addSubview(mapView!)
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+            self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:33.7717, longitude:-118.1934), zoomLevel: 15, animated:false)
+        })
         mapView!.showsUserLocation = true
-        let lat = mapView!.userLocation.coordinate.latitude
-        let lon = mapView!.userLocation.coordinate.longitude
-        let loc = CLLocation(latitude: lat, longitude: lon)
-        // Set the delegate property of our map view to self after instantiating it.
-        loc.coordinate.latitude
-        mapView!.delegate = self
-        
         
         // Do any additional setup after loading the view, typically from a nib.
         imagePickerController = UIImagePickerController()
@@ -83,11 +83,46 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         else {
             imagePickerController!.sourceType = UIImagePickerControllerSourceType.Camera
         }
+        findShips()
     }
     
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+    }
+    
+    func findShips() {
+        var request: Request = Alamofire.request(Method.GET, "https://fisharmony.herokuapp.com/api/reports/search.json")
+        request.responseJSON() {
+            (_, _, data, err) in
+            if err == nil {
+                
+                var json = JSON(data!)
+                var ships: NSMutableArray = NSMutableArray()
+                for var i = 0; i<json.count; i++ {
+                    let ship = Ship(json: json[i])
+                    ships.addObject(ship)
+                    if (ship.hasLocation) {
+                        var annotationType: AnnotationType = AnnotationType.OtherShip
+                        if ship.hasName == false {
+                            annotationType = AnnotationType.IllegalActivity
+                        }
+                        let ellipse = MyAnnotation(location: CLLocationCoordinate2D(latitude: self.locationManager.location.coordinate.latitude, longitude: self.locationManager.location.coordinate.longitude),
+                            title: ship.name!, subtitle: ship.notes!, type: annotationType)
+                        
+                        // Add marker `ellipse` to the map
+                        self.mapView!.addAnnotation(ellipse)
+                    }
+                    else {
+                        // error
+                    }
+                }
+            }
+            else {
+                
+            }
+        }
         
     }
     
@@ -113,10 +148,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         //        self.revGeocode(manager.location)
         let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
-            title: "Hello world!", subtitle: "Welcome to The Ellipse.", type: AnnotationType.Me)
+            title: "That's you!", subtitle: nil, type: AnnotationType.Me)
         
         // Add marker `ellipse` to the map
-        self.mapView!.removeAnnotations(self.mapView!.annotations)
+//        self.mapView!.removeAnnotations(self.mapView!.annotations)
         self.mapView!.addAnnotation(ellipse1)
         self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:manager.location.coordinate.latitude, longitude:manager.location.coordinate.longitude), zoomLevel: 15, animated:false)
         locationManager.stopUpdatingLocation()
@@ -149,6 +184,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
         }
         else {
+            explained = true
             self.explainerPopUp.hidden = false
         }
     }
@@ -156,7 +192,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
         let chosenImage: UIImage = editingInfo[UIImagePickerControllerOriginalImage] as! UIImage
         
-        self.imageView.image = chosenImage;
+//        self.imageView.image = chosenImage;
         
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -168,7 +204,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
-        self.imageView.image = chosenImage;
+//        self.imageView.image = chosenImage;
         
         var parameters = [
             "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString,
@@ -306,5 +342,39 @@ class PopUp: UIView {
             
         })
     }
+}
+
+private class Ship {
+    var name: String?
+    var id: Int?
+    var notes: String?
+    var image: UIImage?
+    var lat: String?
+    var lon: String?
+    var hasName: Bool = true
+    var hasNotes: Bool = true
+    var hasLocation: Bool = true
+    
+    init(json: JSON) {
+        name = json["ship_name"].string
+        if name == nil {
+            hasName = false
+            name = "No Name On Record"
+        }
+        id = json["id"].intValue
+        notes = json["notes"].string
+        if notes == nil {
+            hasNotes = false
+            notes = ""
+        }
+//        image = json["image"].string
+        image = nil
+        lat = json["geolocation"]["latitude"].string
+        lon = json["geolocation"]["longitude"].string
+        if lon == nil || lat == nil {
+            hasLocation = false
+        }
+    }
+    
 }
 

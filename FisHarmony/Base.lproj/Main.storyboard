@@ -5,32 +5,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Table View Controller-->
-        <scene sceneID="hXB-6w-Qge">
-            <objects>
-                <tableViewController id="Z5s-lK-kxf" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="4bQ-wx-AvK">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="vCF-Wg-RfN">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vCF-Wg-RfN" id="gNp-s3-4iM">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="Z5s-lK-kxf" id="7KZ-ay-RwK"/>
-                            <outlet property="delegate" destination="Z5s-lK-kxf" id="H8M-F7-DJq"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JJ7-DD-G7x" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-422" y="307"/>
-        </scene>
         <!--FisHarmony-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -88,6 +62,16 @@
                                     <outlet property="textLabel" destination="TDI-H9-9ar" id="HDI-Se-6qk"/>
                                 </connections>
                             </view>
+                            <view hidden="YES" alpha="0.74999999999999978" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qpj-qp-Agg">
+                                <rect key="frame" x="275" y="275" width="50" height="50"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="11u-X5-Zbc">
+                                        <rect key="frame" x="7" y="6" width="37" height="37"/>
+                                        <color key="color" red="0.18823529410000001" green="0.76862745099999996" blue="0.78823529410000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -106,9 +90,6 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="FisHarmony" id="cg5-Zc-Isl">
-                        <barButtonItem key="leftBarButtonItem" title="Menu" style="done" id="Ib4-wL-YXc">
-                            <color key="tintColor" red="0.63921568627450975" green="0.72156862745098038" blue="0.031372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="camera" id="F4G-zH-3Rs">
                             <color key="tintColor" red="0.82352941180000006" green="0.12549019610000001" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -117,8 +98,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cameraButton" destination="F4G-zH-3Rs" id="qX3-VJ-Ixq"/>
                         <outlet property="explainerPopUp" destination="brG-Fo-L9j" id="7ZN-JV-o19"/>
                         <outlet property="imageView" destination="dgC-5B-4Aq" id="2ca-Vr-RsL"/>
+                        <outlet property="navItem" destination="cg5-Zc-Isl" id="WB8-HK-7bB"/>
+                        <outlet property="progressView" destination="Qpj-qp-Agg" id="1pq-Ss-28x"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -18,6 +18,7 @@ class MyAnnotation: NSObject, MGLAnnotation {
     var title: String!
     var subtitle: String!
     var type: AnnotationType!
+    var tag: Int?
     
     init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: AnnotationType) {
         self.coordinate = coordinate

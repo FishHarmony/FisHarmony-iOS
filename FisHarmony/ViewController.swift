@@ -26,26 +26,29 @@ import CoreLocation
 **/
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate, MGLMapViewDelegate {
+    @IBOutlet weak var progressView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var explainerPopUp: PopUp!
+    @IBOutlet weak var navItem: UINavigationItem!
+    @IBOutlet weak var cameraButton: UIBarButtonItem!
     private var imagePickerController: UIImagePickerController?
     private var locationManager: CLLocationManager = CLLocationManager()
     private var direction: CLLocationDirection = 0.0
     private var mapView: MGLMapView?
     private var explained: Bool = false
+    private var locatedMe: Bool = false
+    private var zoomNumber: Double = 15
     
-    
-
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         switch (annotation as! MyAnnotation).type! {
         case .Me:
-            return "harbor-11"
+            return "default_marker"
         case .OtherShip:
             return "ferry-11"
         case .InjuredMammel:
             return "hospital-11"
         case .IllegalActivity:
-            return "police-11"
+            return "secondary_marker"
         default:
             break
         }
@@ -53,37 +56,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.explainerPopUp.hidden = false
-        
-        mapView = MGLMapView(frame: view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        explainerPopUp.setUp()
-
-        mapView!.delegate = self
-
-        mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-        // set the map's center coordinate
-        // long beach: 33.7717 N, 118.1934 W
-        view.addSubview(mapView!)
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-            self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:33.7717, longitude:-118.1934), zoomLevel: 15, animated:false)
+        self.explainerPopUp.hidden = true
+        setViewAsLoading(true)
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.findShips()
         })
-        mapView!.showsUserLocation = true
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
+            self.mapView = MGLMapView(frame: self.view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
+            self.locationManager.delegate = self
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            self.locationManager.requestAlwaysAuthorization()
+            self.locationManager.startUpdatingLocation()
+            self.mapView!.delegate = self
+            let gr = UITapGestureRecognizer(target: self, action: "zoom")
+            gr.numberOfTapsRequired = 2
+            self.mapView?.addGestureRecognizer(gr)
+            self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+            // set the map's center coordinate
+            // long beach: 33.7717 N, 118.1934 W
+            self.view.addSubview(self.mapView!)
+        })
         
         // Do any additional setup after loading the view, typically from a nib.
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
         imagePickerController!.allowsEditing = false
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) == false {
-            // TODO: alert
+            
         }
         else {
             imagePickerController!.sourceType = UIImagePickerControllerSourceType.Camera
         }
-        findShips()
     }
     
     
@@ -92,7 +95,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
+    func setViewAsLoading(should: Bool) {
+        self.progressView.hidden = !should
+        self.cameraButton.enabled = !should
+        self.mapView?.userInteractionEnabled = !should
+    }
+    
+    func zoom() {
+        // 30 22.5 15
+        setViewAsLoading(true)
+        switch zoomNumber {
+        case 15:
+            mapView?.zoomLevel = 5
+            break
+        case 7.5:
+            mapView?.zoomLevel = 15
+            break
+        case 5:
+            mapView?.zoomLevel = 7.5
+            break
+        default:
+            break
+        }
+    }
+    
     func findShips() {
+        setViewAsLoading(true)
         var request: Request = Alamofire.request(Method.GET, "https://fisharmony.herokuapp.com/api/reports/search.json")
         request.responseJSON() {
             (_, _, data, err) in
@@ -112,6 +140,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                             title: ship.name!, subtitle: ship.notes!, type: annotationType)
                         
                         // Add marker `ellipse` to the map
+                    
                         self.mapView!.addAnnotation(ellipse)
                     }
                     else {
@@ -127,6 +156,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func showCamera() {
+        setViewAsLoading(false)
         self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
     }
     
@@ -140,6 +170,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+        setViewAsLoading(false)
         if newLocation.coordinate.latitude != oldLocation.coordinate.latitude {
             self.revGeocode(newLocation)
         }
@@ -147,26 +178,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         //        self.revGeocode(manager.location)
-        let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
-            title: "That's you!", subtitle: nil, type: AnnotationType.Me)
-        
-        // Add marker `ellipse` to the map
-//        self.mapView!.removeAnnotations(self.mapView!.annotations)
-        self.mapView!.addAnnotation(ellipse1)
-        self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:manager.location.coordinate.latitude, longitude:manager.location.coordinate.longitude), zoomLevel: 15, animated:false)
-        locationManager.stopUpdatingLocation()
+        setViewAsLoading(true)
+        if locatedMe == false {
+            let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
+                title: "That's you!", subtitle: "", type: AnnotationType.Me)
+            
+            // Add marker `ellipse` to the map
+            self.mapView!.addAnnotation(ellipse1)
+            self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:manager.location.coordinate.latitude, longitude:manager.location.coordinate.longitude), zoomLevel: zoomNumber, animated:false)
+            manager.stopUpdatingLocation()
+            locatedMe = true
+        }
+        else {
+            manager.stopUpdatingLocation()
+        }
     }
     
     func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
-        
+        setViewAsLoading(false)
+
     }
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager!) {
-        
+        setViewAsLoading(false)
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
-        
+        setViewAsLoading(false)
     }
     
     func mapView(mapView: MGLMapView!, annotationCanShowCallout annotation: MGLAnnotation!) -> Bool {
@@ -181,18 +219,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func takePhoto(sender: AnyObject) {
         if explained == true {
-            self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
+            self.showCamera()
         }
         else {
             explained = true
+            explainerPopUp.setUp("See sometthing fishy? Take a picture to report illegal activity. When you get back to shore, open this app again. That's it... Really.", button: "Got It")
             self.explainerPopUp.hidden = false
+            self.view.bringSubviewToFront(self.explainerPopUp)
         }
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
         let chosenImage: UIImage = editingInfo[UIImagePickerControllerOriginalImage] as! UIImage
         
-//        self.imageView.image = chosenImage;
+        //        self.imageView.image = chosenImage;
         
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -204,25 +244,33 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
-//        self.imageView.image = chosenImage;
+        //        self.imageView.image = chosenImage;
         
         var parameters = [
             "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString,
         ]
         
-        let urlRequest = urlRequestWithComponents("http://requestb.in/19x6fnq1", parameters: parameters, imageData: imageData)
+        let urlRequest = urlRequestWithComponents("https://fisharmony.herokuapp.com/api/reports/", parameters: parameters, imageData: imageData)
         
-        Alamofire.upload(urlRequest.0, urlRequest.1)
-            .progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-                println("\(totalBytesWritten) / \(totalBytesExpectedToWrite)")
-            }
-            .response { (request, response, _, error) in
+        Alamofire.upload(urlRequest.0, urlRequest.1).progress
+            {
+                (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+            }.response
+            {
+                (request, response, _, error) in
                 println("REQUEST \(request)")
                 println("RESPONSE \(response)")
                 println("ERROR \(error)")
         }
         
         picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    func mapViewDidFailLoadingMap(mapView: MGLMapView!, withError error: NSError!) {
+        setViewAsLoading(false)
+    }
+    
+    func mapViewDidFinishLoadingMap(mapView: MGLMapView!) {
+        setViewAsLoading(false)
     }
     
     func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
@@ -241,8 +289,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // add image
         uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        uploadData.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"file.png\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        uploadData.appendData("Content-Type: image/png\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Disposition: form-data; name=\"file_data\"; filename=\"file_data.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Type: image/jpg\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         uploadData.appendData(imageData)
         
         // add parameters
@@ -285,7 +333,7 @@ public enum Router:URLRequestConvertible {
     }
     
     public var URLRequest: NSURLRequest {
-        var URL: NSURL = NSURL(string: "http://requestb.in/18qq1gn1")!
+        var URL: NSURL = NSURL(string: "https://fisharmony.herokuapp.com/api/reports/")!
         var mutableURLRequest = NSMutableURLRequest(URL: URL.URLByAppendingPathComponent(path))
         mutableURLRequest.HTTPMethod = method.rawValue
         
@@ -321,14 +369,16 @@ class PopUp: UIView {
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var gotItButton: UIButton!
     
-    func setUp() {
+    func setUp(text: String, button: String) {
         self.layer.cornerRadius = 10.0
         self.gotItButton.layer.cornerRadius = 10.0
+        self.textLabel.text = text
+        self.gotItButton.titleLabel?.text = button
     }
     
     @IBAction func closePopUp(sender: AnyObject) {
         let frame1 = self.frame
-        
+    
         self.frame = CGRectMake(frame1.origin.x-5, frame1.origin.y-5, frame1.width+10, frame1.height+10)
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(0.5)
@@ -338,8 +388,10 @@ class PopUp: UIView {
         UIView.commitAnimations()
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            
-            
+            self.hidden = true
+            self.frame = frame1
+            self.textLabel.hidden = false
+            self.gotItButton.hidden = false
         })
     }
 }
@@ -367,7 +419,7 @@ private class Ship {
             hasNotes = false
             notes = ""
         }
-//        image = json["image"].string
+        //        image = json["image"].string
         image = nil
         lat = json["geolocation"]["latitude"].string
         lon = json["geolocation"]["longitude"].string

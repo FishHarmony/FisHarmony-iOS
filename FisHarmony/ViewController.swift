@@ -68,44 +68,29 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        
+        let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
         self.imageView.image = chosenImage;
-//        var imageData = UIImageJPEGRepresentation(chosenImage, 0.1)
-//        let bin = "http://requestb.in/1adk4gc1"
-//        let encoding = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
+
+        var parameters = [
+            "uploader_id": "abc",
+        ]
         
+        let urlRequest = urlRequestWithComponents("http://requestb.in/19x6fnq1", parameters: parameters, imageData: imageData)
         
-        
-        
-        let fileName = "illegalActivity.jpg"
-        
-        
-        Photo.upload(chosenImage, filename: fileName).progress {
-            (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-                println(totalBytesWritten)
-            }.responseJSON {
-                (request, response, JSON, error) in
-                println(JSON)
+        Alamofire.upload(urlRequest.0, urlRequest.1)
+            .progress { (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
+                println("\(totalBytesWritten) / \(totalBytesExpectedToWrite)")
             }
+            .response { (request, response, _, error) in
+                println("REQUEST \(request)")
+                println("RESPONSE \(response)")
+                println("ERROR \(error)")
+        }
         
-//            Method.POST, "\(bin)/node/\(UIDevice.currentDevice().identifierForVendor.UUIDString)/attach_file", parameters: nil, constructingBodyWithBlock:
-//            {
-//                (formData) -> Void in
-//                
-//                formData.appendPartWithFileData(imageData, name: "files[field_mobileinfo_image]", fileName: "field_mobileinfo_image", mimeType: "image/jpeg")
-//                formData.appendPartWithFormData("field_mobileinfo_image".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), name: "field_name")
-//        })
         
-        //        let str = NSString(data: imageData, encoding: UInt.allZeros)
-        //        let str = String(stringInterpolationSegment: encoding)
-        //        let apiRequest:Request = request(Method.POST, bin, parameters: params, encoding: ParameterEncoding.JSON)
         
-        //        Alamofire.request(Alamofire.Method.POST, bin, parameters: params, encoding: nil)
-        //        NSLog("All Zeros: \(imageData.base64EncodedDataWithOptions(NSDataBase64EncodingOptions.allZeros).description)")
-        //        NSLog("64 char line length: \(imageData.base64EncodedDataWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength).description)")
-        //        NSLog("76 char line length: \(imageData.base64EncodedDataWithOptions(NSDataBase64EncodingOptions.Encoding76CharacterLineLength).description)")
-        //        NSLog("End line with carriage return: \(imageData.base64EncodedDataWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithCarriageReturn).description)")
-        //        NSLog("End line with line feed: \(imageData.base64EncodedDataWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed).description)")
+        
+        
         
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -114,33 +99,43 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
-}
-
-class Photo {
-    class func upload(image: UIImage, filename: String) -> Request {
-        let bin = "http://requestb.in/18qq1gn1"
-        let route = Router.Upload(fieldName: "image", fileName: "illegalShit.jpeg", mimeType: "image/jpeg", fileContents: UIImageJPEGRepresentation(image, 1), boundaryConstant: "\(arc4random())")
-        var request = route.URLRequest.mutableCopy() as! NSMutableURLRequest
-        let mimeType = "image/jpeg"
-        let name = "image"
-//        var bodyData = "fileName=\(filename)&mimeType=\(mimeType)&name=\(name)"
-//        request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+    func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
         
-        let boundary = "NET-POST-boundary-\(arc4random())-\(arc4random())"
-        request.setValue("multipart/form-data;boundary="+boundary, forHTTPHeaderField: "Content-Type")
-        let params: [String: AnyObject] = ["uploader_id" as String: UIDevice.currentDevice().identifierForVendor.UUIDString]
-
-        let parameters = NSMutableData()
-        for s in
-            ["\r\n--\(boundary)\r\n", "Content-Disposition: form-data; name=\"\(name)\";" + " filename=\"\(filename)\"\r\n", "Content-Type: \(mimeType)\r\n\r\n"]
-        {
-                parameters.appendData(s.dataUsingEncoding(NSUTF8StringEncoding)!)
+        // create url request to send
+        var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: urlString)!)
+        mutableURLRequest.HTTPMethod = Alamofire.Method.POST.rawValue
+        let boundaryConstant = "myRandomBoundary12345";
+        let contentType = "multipart/form-data;boundary="+boundaryConstant
+        mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        
+        
+        
+        // create upload data to send
+        let uploadData = NSMutableData()
+        
+        // add image
+        uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"file.png\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData("Content-Type: image/png\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        uploadData.appendData(imageData)
+        
+        // add parameters
+        for (key, value) in parameters {
+            uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+            uploadData.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
         }
-        parameters.appendData(UIImageJPEGRepresentation(image, 1))
-        parameters.appendData("\r\n--\(boundary)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        return Alamofire.upload(request, parameters)
+        uploadData.appendData("\r\n--\(boundaryConstant)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        
+        
+        // return URLRequestConvertible and NSData
+        return (Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0, uploadData)
     }
+    
 }
+
+
+
 
 public enum Router:URLRequestConvertible {
     case Upload(fieldName: String, fileName: String, mimeType: String, fileContents: NSData, boundaryConstant:String);

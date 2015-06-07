@@ -38,6 +38,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private var explained: Bool = false
     private var locatedMe: Bool = false
     private var zoomNumber: Double = 15
+    private var location: CLLocation?
     
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         switch (annotation as! MyAnnotation).type! {
@@ -57,10 +58,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         self.explainerPopUp.hidden = true
+        self.progressView.layer.cornerRadius = 5.0
         setViewAsLoading(true)
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.findShips()
         })
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "showCamera", name: "yes", object: nil)
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
             self.mapView = MGLMapView(frame: self.view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
             self.locationManager.delegate = self
@@ -99,24 +102,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.progressView.hidden = !should
         self.cameraButton.enabled = !should
         self.mapView?.userInteractionEnabled = !should
+        self.view.bringSubviewToFront(self.progressView)
     }
     
     func zoom() {
         // 30 22.5 15
-        setViewAsLoading(true)
-        switch zoomNumber {
-        case 15:
-            mapView?.zoomLevel = 5
-            break
-        case 7.5:
-            mapView?.zoomLevel = 15
-            break
-        case 5:
-            mapView?.zoomLevel = 7.5
-            break
-        default:
-            break
-        }
+//        setViewAsLoading(true)
+//        switch zoomNumber {
+//        case 15:
+//            mapView?.zoomLevel = 5
+//            break
+//        case 7.5:
+//            mapView?.zoomLevel = 15
+//            break
+//        case 5:
+//            mapView?.zoomLevel = 7.5
+//            break
+//        default:
+//            break
+//        }
     }
     
     func findShips() {
@@ -178,7 +182,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         //        self.revGeocode(manager.location)
-        setViewAsLoading(true)
+        setViewAsLoading(false)
         if locatedMe == false {
             let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
                 title: "That's you!", subtitle: "", type: AnnotationType.Me)
@@ -245,7 +249,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
         //        self.imageView.image = chosenImage;
-        
+        let datetime = info[UIImagePickerControllerMediaMetadata]
         var parameters = [
             "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString,
         ]
@@ -392,6 +396,7 @@ class PopUp: UIView {
             self.frame = frame1
             self.textLabel.hidden = false
             self.gotItButton.hidden = false
+            NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "yes", object: nil))
         })
     }
 }

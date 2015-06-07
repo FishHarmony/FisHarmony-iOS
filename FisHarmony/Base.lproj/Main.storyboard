@@ -62,15 +62,21 @@
                                     <outlet property="textLabel" destination="TDI-H9-9ar" id="HDI-Se-6qk"/>
                                 </connections>
                             </view>
-                            <view hidden="YES" alpha="0.74999999999999978" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qpj-qp-Agg">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qpj-qp-Agg">
                                 <rect key="frame" x="275" y="275" width="50" height="50"/>
                                 <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="11u-X5-Zbc">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="11u-X5-Zbc">
                                         <rect key="frame" x="7" y="6" width="37" height="37"/>
                                         <color key="color" red="0.18823529410000001" green="0.76862745099999996" blue="0.78823529410000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="6u3-R8-JDT"/>
+                                    <constraint firstAttribute="width" constant="50" id="E4g-cw-sTh"/>
+                                    <constraint firstAttribute="centerY" secondItem="11u-X5-Zbc" secondAttribute="centerY" id="Maz-Iq-hjI"/>
+                                    <constraint firstAttribute="centerX" secondItem="11u-X5-Zbc" secondAttribute="centerX" id="xlZ-fH-Xmw"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -78,9 +84,11 @@
                             <constraint firstItem="dgC-5B-4Aq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="3B7-v3-ddY"/>
                             <constraint firstAttribute="centerY" secondItem="brG-Fo-L9j" secondAttribute="centerY" id="5lK-Vz-whF"/>
                             <constraint firstAttribute="trailingMargin" secondItem="dgC-5B-4Aq" secondAttribute="trailing" constant="-16" id="AKD-hX-doA"/>
+                            <constraint firstAttribute="centerY" secondItem="Qpj-qp-Agg" secondAttribute="centerY" id="O2v-wt-U4S"/>
                             <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="R2j-RS-lfB"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dgC-5B-4Aq" secondAttribute="bottom" id="YAd-oy-eyU"/>
                             <constraint firstAttribute="centerX" secondItem="brG-Fo-L9j" secondAttribute="centerX" id="dNA-Sq-qGJ"/>
+                            <constraint firstAttribute="centerX" secondItem="Qpj-qp-Agg" secondAttribute="centerX" id="oMy-nG-OKA"/>
                             <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="omC-hM-cVc"/>
                         </constraints>
                         <variation key="default">

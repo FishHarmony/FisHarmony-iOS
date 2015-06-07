@@ -1,0 +1,509 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7322FD9F0FF9ECA40E7C396C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		BAAE148E1B23DB4600F0449D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAAE148D1B23DB4600F0449D /* Foundation.framework */; };
+		BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558231B22A17900389A9D /* AppDelegate.swift */; };
+		BAD558261B22A17900389A9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558251B22A17900389A9D /* ViewController.swift */; };
+		BAD558291B22A17900389A9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAD558271B22A17900389A9D /* Main.storyboard */; };
+		BAD5582B1B22A17900389A9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAD5582A1B22A17900389A9D /* Images.xcassets */; };
+		BAD5582E1B22A17900389A9D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAD5582C1B22A17900389A9D /* LaunchScreen.xib */; };
+		BAD5583A1B22A17900389A9D /* FisHarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558391B22A17900389A9D /* FisHarmonyTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BAD558341B22A17900389A9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BAD558161B22A17900389A9D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BAD5581D1B22A17900389A9D;
+			remoteInfo = FisHarmony;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		153FEFC76316E51F4D491BEB /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		BAAE148D1B23DB4600F0449D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BAD5581E1B22A17900389A9D /* FisHarmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FisHarmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAD558221B22A17900389A9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BAD558231B22A17900389A9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BAD558251B22A17900389A9D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BAD558281B22A17900389A9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BAD5582A1B22A17900389A9D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		BAD5582D1B22A17900389A9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		BAD558331B22A17900389A9D /* FisHarmonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FisHarmonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAD558381B22A17900389A9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BAD558391B22A17900389A9D /* FisHarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FisHarmonyTests.swift; sourceTree = "<group>"; };
+		C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BAD5581B1B22A17900389A9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAAE148E1B23DB4600F0449D /* Foundation.framework in Frameworks */,
+				7322FD9F0FF9ECA40E7C396C /* Pods.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAD558301B22A17900389A9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0AF8727A32C32F911A15E67E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				153FEFC76316E51F4D491BEB /* Pods.debug.xcconfig */,
+				A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		BAD558151B22A17900389A9D = {
+			isa = PBXGroup;
+			children = (
+				BAD558201B22A17900389A9D /* FisHarmony */,
+				BAD558361B22A17900389A9D /* FisHarmonyTests */,
+				BAD5581F1B22A17900389A9D /* Products */,
+				0AF8727A32C32F911A15E67E /* Pods */,
+				BDCEB0B753E5ECA8A706BB43 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		BAD5581F1B22A17900389A9D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BAD5581E1B22A17900389A9D /* FisHarmony.app */,
+				BAD558331B22A17900389A9D /* FisHarmonyTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BAD558201B22A17900389A9D /* FisHarmony */ = {
+			isa = PBXGroup;
+			children = (
+				BAD558231B22A17900389A9D /* AppDelegate.swift */,
+				BAD558251B22A17900389A9D /* ViewController.swift */,
+				BAD558271B22A17900389A9D /* Main.storyboard */,
+				BAD5582A1B22A17900389A9D /* Images.xcassets */,
+				BAD5582C1B22A17900389A9D /* LaunchScreen.xib */,
+				BAD558211B22A17900389A9D /* Supporting Files */,
+			);
+			path = FisHarmony;
+			sourceTree = "<group>";
+		};
+		BAD558211B22A17900389A9D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BAD558221B22A17900389A9D /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BAD558361B22A17900389A9D /* FisHarmonyTests */ = {
+			isa = PBXGroup;
+			children = (
+				BAD558391B22A17900389A9D /* FisHarmonyTests.swift */,
+				BAD558371B22A17900389A9D /* Supporting Files */,
+			);
+			path = FisHarmonyTests;
+			sourceTree = "<group>";
+		};
+		BAD558371B22A17900389A9D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BAD558381B22A17900389A9D /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BDCEB0B753E5ECA8A706BB43 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BAAE148D1B23DB4600F0449D /* Foundation.framework */,
+				C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BAD5581D1B22A17900389A9D /* FisHarmony */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BAD5583D1B22A17900389A9D /* Build configuration list for PBXNativeTarget "FisHarmony" */;
+			buildPhases = (
+				36D84A6452D44173EE24BB25 /* Check Pods Manifest.lock */,
+				BAD5581A1B22A17900389A9D /* Sources */,
+				BAD5581B1B22A17900389A9D /* Frameworks */,
+				BAD5581C1B22A17900389A9D /* Resources */,
+				2B3AFF79050ABEFDE8929FFE /* Embed Pods Frameworks */,
+				CAFDA639000C658D28997665 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FisHarmony;
+			productName = FisHarmony;
+			productReference = BAD5581E1B22A17900389A9D /* FisHarmony.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BAD558321B22A17900389A9D /* FisHarmonyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BAD558401B22A17900389A9D /* Build configuration list for PBXNativeTarget "FisHarmonyTests" */;
+			buildPhases = (
+				BAD5582F1B22A17900389A9D /* Sources */,
+				BAD558301B22A17900389A9D /* Frameworks */,
+				BAD558311B22A17900389A9D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BAD558351B22A17900389A9D /* PBXTargetDependency */,
+			);
+			name = FisHarmonyTests;
+			productName = FisHarmonyTests;
+			productReference = BAD558331B22A17900389A9D /* FisHarmonyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BAD558161B22A17900389A9D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = WhitneyFoster;
+				TargetAttributes = {
+					BAD5581D1B22A17900389A9D = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+					BAD558321B22A17900389A9D = {
+						CreatedOnToolsVersion = 6.3.1;
+						TestTargetID = BAD5581D1B22A17900389A9D;
+					};
+				};
+			};
+			buildConfigurationList = BAD558191B22A17900389A9D /* Build configuration list for PBXProject "FisHarmony" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BAD558151B22A17900389A9D;
+			productRefGroup = BAD5581F1B22A17900389A9D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BAD5581D1B22A17900389A9D /* FisHarmony */,
+				BAD558321B22A17900389A9D /* FisHarmonyTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BAD5581C1B22A17900389A9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAD558291B22A17900389A9D /* Main.storyboard in Resources */,
+				BAD5582E1B22A17900389A9D /* LaunchScreen.xib in Resources */,
+				BAD5582B1B22A17900389A9D /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAD558311B22A17900389A9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2B3AFF79050ABEFDE8929FFE /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		36D84A6452D44173EE24BB25 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CAFDA639000C658D28997665 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BAD5581A1B22A17900389A9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAD558261B22A17900389A9D /* ViewController.swift in Sources */,
+				BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAD5582F1B22A17900389A9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BAD5583A1B22A17900389A9D /* FisHarmonyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BAD558351B22A17900389A9D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BAD5581D1B22A17900389A9D /* FisHarmony */;
+			targetProxy = BAD558341B22A17900389A9D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BAD558271B22A17900389A9D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BAD558281B22A17900389A9D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BAD5582C1B22A17900389A9D /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BAD5582D1B22A17900389A9D /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BAD5583B1B22A17900389A9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BAD5583C1B22A17900389A9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BAD5583E1B22A17900389A9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 153FEFC76316E51F4D491BEB /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FisHarmony/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BAD5583F1B22A17900389A9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FisHarmony/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BAD558411B22A17900389A9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = FisHarmonyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FisHarmony.app/FisHarmony";
+			};
+			name = Debug;
+		};
+		BAD558421B22A17900389A9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = FisHarmonyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FisHarmony.app/FisHarmony";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BAD558191B22A17900389A9D /* Build configuration list for PBXProject "FisHarmony" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAD5583B1B22A17900389A9D /* Debug */,
+				BAD5583C1B22A17900389A9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BAD5583D1B22A17900389A9D /* Build configuration list for PBXNativeTarget "FisHarmony" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAD5583E1B22A17900389A9D /* Debug */,
+				BAD5583F1B22A17900389A9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BAD558401B22A17900389A9D /* Build configuration list for PBXNativeTarget "FisHarmonyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAD558411B22A17900389A9D /* Debug */,
+				BAD558421B22A17900389A9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BAD558161B22A17900389A9D /* Project object */;
+}

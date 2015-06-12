@@ -41,7 +41,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="closePopUp:" destination="brG-Fo-L9j" eventType="touchUpInside" id="ERI-zN-LoU"/>
+                                            <action selector="closePopUp:" destination="brG-Fo-L9j" eventType="touchUpInside" id="fww-Un-brc"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -58,8 +58,8 @@
                                     <constraint firstItem="EXZ-XH-Vyz" firstAttribute="leading" secondItem="brG-Fo-L9j" secondAttribute="leading" constant="8" id="sZH-Ml-AH9"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="gotItButton" destination="EXZ-XH-Vyz" id="gvs-Hp-UDs"/>
-                                    <outlet property="textLabel" destination="TDI-H9-9ar" id="HDI-Se-6qk"/>
+                                    <outlet property="gotItButton" destination="EXZ-XH-Vyz" id="5Mu-es-d9x"/>
+                                    <outlet property="textLabel" destination="TDI-H9-9ar" id="8fq-J2-WKc"/>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qpj-qp-Agg">

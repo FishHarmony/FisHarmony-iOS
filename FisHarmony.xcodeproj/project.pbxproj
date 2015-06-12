@@ -17,6 +17,9 @@
 		BAD5582B1B22A17900389A9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAD5582A1B22A17900389A9D /* Images.xcassets */; };
 		BAD5582E1B22A17900389A9D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAD5582C1B22A17900389A9D /* LaunchScreen.xib */; };
 		BAD5583A1B22A17900389A9D /* FisHarmonyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558391B22A17900389A9D /* FisHarmonyTests.swift */; };
+		BAECA44A1B2A568A006C8CAE /* PopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECA4491B2A568A006C8CAE /* PopUp.swift */; };
+		BAECA44C1B2A574C006C8CAE /* Ship.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECA44B1B2A574C006C8CAE /* Ship.swift */; };
+		BAECA44E1B2A5884006C8CAE /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAECA44D1B2A5884006C8CAE /* Picture.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +48,9 @@
 		BAD558331B22A17900389A9D /* FisHarmonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FisHarmonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAD558381B22A17900389A9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BAD558391B22A17900389A9D /* FisHarmonyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FisHarmonyTests.swift; sourceTree = "<group>"; };
+		BAECA4491B2A568A006C8CAE /* PopUp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUp.swift; sourceTree = "<group>"; };
+		BAECA44B1B2A574C006C8CAE /* Ship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ship.swift; sourceTree = "<group>"; };
+		BAECA44D1B2A5884006C8CAE /* Picture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
 		C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,6 +113,9 @@
 				BAD5582C1B22A17900389A9D /* LaunchScreen.xib */,
 				BAD558211B22A17900389A9D /* Supporting Files */,
 				BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */,
+				BAECA4491B2A568A006C8CAE /* PopUp.swift */,
+				BAECA44B1B2A574C006C8CAE /* Ship.swift */,
+				BAECA44D1B2A5884006C8CAE /* Picture.swift */,
 			);
 			path = FisHarmony;
 			sourceTree = "<group>";
@@ -198,6 +207,7 @@
 				TargetAttributes = {
 					BAD5581D1B22A17900389A9D = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = YJN7586XEB;
 					};
 					BAD558321B22A17900389A9D = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -298,9 +308,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAECA44E1B2A5884006C8CAE /* Picture.swift in Sources */,
 				BAD558261B22A17900389A9D /* ViewController.swift in Sources */,
 				BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */,
+				BAECA44A1B2A568A006C8CAE /* PopUp.swift in Sources */,
 				BA0CD08D1B244F1600B14964 /* MyAnnotation.swift in Sources */,
+				BAECA44C1B2A574C006C8CAE /* Ship.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,10 +443,13 @@
 			baseConfigurationReference = 153FEFC76316E51F4D491BEB /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FisHarmony/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -442,10 +458,13 @@
 			baseConfigurationReference = A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FisHarmony/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

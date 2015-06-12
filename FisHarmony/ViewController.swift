@@ -37,48 +37,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private var mapView: MGLMapView?
     private var explained: Bool = false
     private var locatedMe: Bool = false
-    private var zoomNumber: Double = 15
+    private var zoomNumber: Double = 16
     private var location: CLLocation?
+    private var zoomDirection: Int = -1
     
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
-        switch (annotation as! MyAnnotation).type! {
-        case .Me:
-            return "default_marker"
-        case .OtherShip:
-            return "ferry-11"
-        case .InjuredMammel:
-            return "hospital-11"
-        case .IllegalActivity:
-            return "secondary_marker"
-        default:
-            break
-        }
+        return (annotation as! MyAnnotation).picture()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setViewAsLoading(true)
         self.explainerPopUp.hidden = true
         self.progressView.layer.cornerRadius = 5.0
-        setViewAsLoading(true)
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.findShips()
-        })
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showCamera", name: "yes", object: nil)
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0), {
-            self.mapView = MGLMapView(frame: self.view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
-            self.locationManager.delegate = self
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            self.locationManager.requestAlwaysAuthorization()
-            self.locationManager.startUpdatingLocation()
-            self.mapView!.delegate = self
-            let gr = UITapGestureRecognizer(target: self, action: "zoom")
-            gr.numberOfTapsRequired = 2
-            self.mapView?.addGestureRecognizer(gr)
-            self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-            // set the map's center coordinate
-            // long beach: 33.7717 N, 118.1934 W
-            self.view.addSubview(self.mapView!)
-        })
+        self.mapView = MGLMapView(frame: self.view.frame, accessToken: "pk.eyJ1Ijoid2hpdG5leW1hcnRpbmZlbGl4ZGFubnkiLCJhIjoiOTZkNGNlNDYwZmZmMmJlYmE1YWU0M2VlZTg5NzdjZDkifQ.0WNO3P6yhLQXppQs5-aGEA")
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
+        self.mapView!.delegate = self
+        let gr = UITapGestureRecognizer(target: self, action: "zoom:")
+        gr.numberOfTapsRequired = 2
+        self.mapView?.addGestureRecognizer(gr)
+        self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        
+        self.view.addSubview(self.mapView!)
         
         // Do any additional setup after loading the view, typically from a nib.
         imagePickerController = UIImagePickerController()
@@ -105,22 +89,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.view.bringSubviewToFront(self.progressView)
     }
     
-    func zoom() {
-        // 30 22.5 15
-//        setViewAsLoading(true)
-//        switch zoomNumber {
-//        case 15:
-//            mapView?.zoomLevel = 5
-//            break
-//        case 7.5:
-//            mapView?.zoomLevel = 15
-//            break
-//        case 5:
-//            mapView?.zoomLevel = 7.5
-//            break
-//        default:
-//            break
-//        }
+    func zoom(sender: AnyObject) {
+        var center = mapView?.centerCoordinate
+        setViewAsLoading(true)
+        let z = zoomNumber
+        if z <= 5 { //z = 0
+            zoomDirection = 1
+            zoomNumber++
+        }
+        else if z <= 16 { // z = 1-16 -> 0-15
+            if zoomDirection == -1 {
+                zoomNumber--
+            }
+            else if zoomDirection == 1 {
+                zoomNumber++
+            }
+            if zoomNumber == 16 {
+                zoomDirection = -1
+            }
+        }
+
+        mapView?.setCenterCoordinate(center!, zoomLevel: zoomNumber, animated: true)
+        setViewAsLoading(false)
     }
     
     func findShips() {
@@ -144,7 +134,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                             title: ship.name!, subtitle: ship.notes!, type: annotationType)
                         
                         // Add marker `ellipse` to the map
-                    
+                        
                         self.mapView!.addAnnotation(ellipse)
                     }
                     else {
@@ -174,15 +164,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
-        setViewAsLoading(false)
+        //        setViewAsLoading(false)
         if newLocation.coordinate.latitude != oldLocation.coordinate.latitude {
+            location = CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude)
             self.revGeocode(newLocation)
         }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         //        self.revGeocode(manager.location)
-        setViewAsLoading(false)
+        //        setViewAsLoading(false)
+        location = manager.location
         if locatedMe == false {
             let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
                 title: "That's you!", subtitle: "", type: AnnotationType.Me)
@@ -191,16 +183,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             self.mapView!.addAnnotation(ellipse1)
             self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:manager.location.coordinate.latitude, longitude:manager.location.coordinate.longitude), zoomLevel: zoomNumber, animated:false)
             manager.stopUpdatingLocation()
+            self.locationManager.stopUpdatingLocation()
             locatedMe = true
         }
         else {
             manager.stopUpdatingLocation()
+            self.locationManager.stopUpdatingLocation()
         }
     }
     
     func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
         setViewAsLoading(false)
-
+        
     }
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager!) {
@@ -249,9 +243,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
         //        self.imageView.image = chosenImage;
-        let datetime = info[UIImagePickerControllerMediaMetadata]
         var parameters = [
-            "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString,
+            "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString
         ]
         
         let urlRequest = urlRequestWithComponents("https://fisharmony.herokuapp.com/api/reports/", parameters: parameters, imageData: imageData)
@@ -275,6 +268,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func mapViewDidFinishLoadingMap(mapView: MGLMapView!) {
         setViewAsLoading(false)
+    }
+    
+    func mapViewDidFinishRenderingMap(mapView: MGLMapView!, fullyRendered: Bool) {
+        self.cameraButton.enabled = true
     }
     
     func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
@@ -369,69 +366,5 @@ public enum Router:URLRequestConvertible {
     }
 }
 
-class PopUp: UIView {
-    @IBOutlet weak var textLabel: UILabel!
-    @IBOutlet weak var gotItButton: UIButton!
-    
-    func setUp(text: String, button: String) {
-        self.layer.cornerRadius = 10.0
-        self.gotItButton.layer.cornerRadius = 10.0
-        self.textLabel.text = text
-        self.gotItButton.titleLabel?.text = button
-    }
-    
-    @IBAction func closePopUp(sender: AnyObject) {
-        let frame1 = self.frame
-    
-        self.frame = CGRectMake(frame1.origin.x-5, frame1.origin.y-5, frame1.width+10, frame1.height+10)
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(0.5)
-        self.frame = CGRectMake(frame1.origin.x+(frame1.width/2), frame1.origin.y+(frame1.height/2), 0, 0)
-        self.textLabel.hidden = true
-        self.gotItButton.hidden = true
-        UIView.commitAnimations()
-        
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.hidden = true
-            self.frame = frame1
-            self.textLabel.hidden = false
-            self.gotItButton.hidden = false
-            NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "yes", object: nil))
-        })
-    }
-}
 
-private class Ship {
-    var name: String?
-    var id: Int?
-    var notes: String?
-    var image: UIImage?
-    var lat: String?
-    var lon: String?
-    var hasName: Bool = true
-    var hasNotes: Bool = true
-    var hasLocation: Bool = true
-    
-    init(json: JSON) {
-        name = json["ship_name"].string
-        if name == nil {
-            hasName = false
-            name = "No Name On Record"
-        }
-        id = json["id"].intValue
-        notes = json["notes"].string
-        if notes == nil {
-            hasNotes = false
-            notes = ""
-        }
-        //        image = json["image"].string
-        image = nil
-        lat = json["geolocation"]["latitude"].string
-        lon = json["geolocation"]["longitude"].string
-        if lon == nil || lat == nil {
-            hasLocation = false
-        }
-    }
-    
-}
 

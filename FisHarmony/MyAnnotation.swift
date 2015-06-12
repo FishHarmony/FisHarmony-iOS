@@ -27,4 +27,21 @@ class MyAnnotation: NSObject, MGLAnnotation {
         self.type = type
     }
     
+    func picture() -> String {
+        switch self.type! {
+        case .Me:
+            return "default_marker"
+        case .OtherShip:
+            return "ferry-11"
+        case .InjuredMammel:
+            return "hospital-11"
+        case .IllegalActivity:
+            return "secondary_marker"
+        default:
+            break
+        }
+        return ""
+
+    }
+    
 }

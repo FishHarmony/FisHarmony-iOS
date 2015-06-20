@@ -10,17 +10,13 @@ import Foundation
 import CoreLocation
 import UIKit
 
-public enum ReportingType: Int {
-    case InjuredMammel = 0, OtherShip, FavoriteSpot, IllegalActivity, BiCatch
-}
-
 class Picture {
     var name: String?
     var coordinates: CLLocationCoordinate2D?
-    var reportingType: ReportingType?
+    var reportingType: Int?
     var image: UIImage?
     
-    init(name: String?, coordinates: CLLocationCoordinate2D?, type: ReportingType?, image: UIImage?) {
+    init(name: String?, coordinates: CLLocationCoordinate2D?, type: Int?, image: UIImage?) {
         self.name = name
         self.coordinates = coordinates
         self.reportingType = type

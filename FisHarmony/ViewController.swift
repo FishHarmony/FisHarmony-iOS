@@ -25,21 +25,29 @@ import CoreLocation
 }
 **/
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate, MGLMapViewDelegate {
+// MARK: Delegate Declaration
+@objc
+protocol ViewControllerDelegate {
+    optional func toggleRightPanel()
+    optional func collapseSidePanels()
+}
+
+
+
+class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, MenuViewControllerActionDelegate {
     @IBOutlet weak var progressView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var explainerPopUp: PopUp!
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
-    private var imagePickerController: UIImagePickerController?
     private var locationManager: CLLocationManager = CLLocationManager()
     private var direction: CLLocationDirection = 0.0
     private var mapView: MGLMapView?
-    private var explained: Bool = false
-    private var locatedMe: Bool = false
     private var zoomNumber: Double = 16
     private var location: CLLocation?
     private var zoomDirection: Int = -1
+    var delegate: ViewControllerDelegate?
+    private var waitingToSegue: Bool = false
     
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         return (annotation as! MyAnnotation).picture()
@@ -48,6 +56,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         setViewAsLoading(true)
+        self.explainerPopUp.setUp("Take a picture to report illegal activity. This is completely anonymous. When you have signal, we'll send the report for you. That's it... Really", button: "Got It")
         self.explainerPopUp.hidden = true
         self.progressView.layer.cornerRadius = 5.0
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "showCamera", name: "yes", object: nil)
@@ -55,27 +64,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestAlwaysAuthorization()
-        self.locationManager.startUpdatingLocation()
+        self.locationManager.startMonitoringSignificantLocationChanges()
         self.mapView!.delegate = self
         let gr = UITapGestureRecognizer(target: self, action: "zoom:")
         gr.numberOfTapsRequired = 2
         self.mapView?.addGestureRecognizer(gr)
         self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
-        
+        self.mapView?.showsUserLocation = true
         self.view.addSubview(self.mapView!)
         
-        // Do any additional setup after loading the view, typically from a nib.
-        imagePickerController = UIImagePickerController()
-        imagePickerController!.delegate = self
-        imagePickerController!.allowsEditing = false
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) == false {
-            
-        }
-        else {
-            imagePickerController!.sourceType = UIImagePickerControllerSourceType.Camera
-        }
     }
-    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -108,7 +106,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 zoomDirection = -1
             }
         }
-
+        
         mapView?.setCenterCoordinate(center!, zoomLevel: zoomNumber, animated: true)
         setViewAsLoading(false)
     }
@@ -125,11 +123,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 for var i = 0; i<json.count; i++ {
                     let ship = Ship(json: json[i])
                     ships.addObject(ship)
-                    if (ship.hasLocation) {
-                        var annotationType: AnnotationType = AnnotationType.OtherShip
-                        if ship.hasName == false {
-                            annotationType = AnnotationType.IllegalActivity
-                        }
+                    if (ship.location != nil) {
+                        var annotationType: Int = typeDictionary[ship.category!]!
                         let ellipse = MyAnnotation(location: CLLocationCoordinate2D(latitude: self.locationManager.location.coordinate.latitude, longitude: self.locationManager.location.coordinate.longitude),
                             title: ship.name!, subtitle: ship.notes!, type: annotationType)
                         
@@ -151,7 +146,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func showCamera() {
         setViewAsLoading(false)
-        self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
+        delegate?.toggleRightPanel?()
+
+//        self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
     }
     
     func revGeocode(location: CLLocation!) {
@@ -164,32 +161,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
-        //        setViewAsLoading(false)
         if newLocation.coordinate.latitude != oldLocation.coordinate.latitude {
             location = CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude)
-            self.revGeocode(newLocation)
+            NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
         }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        //        self.revGeocode(manager.location)
-        //        setViewAsLoading(false)
-        location = manager.location
-        if locatedMe == false {
-            let ellipse1 = MyAnnotation(location: CLLocationCoordinate2D(latitude: manager.location.coordinate.latitude, longitude: manager.location.coordinate.longitude),
-                title: "That's you!", subtitle: "", type: AnnotationType.Me)
-            
-            // Add marker `ellipse` to the map
-            self.mapView!.addAnnotation(ellipse1)
-            self.mapView!.setCenterCoordinate(CLLocationCoordinate2D(latitude:manager.location.coordinate.latitude, longitude:manager.location.coordinate.longitude), zoomLevel: zoomNumber, animated:false)
-            manager.stopUpdatingLocation()
-            self.locationManager.stopUpdatingLocation()
-            locatedMe = true
-        }
-        else {
-            manager.stopUpdatingLocation()
-            self.locationManager.stopUpdatingLocation()
-        }
+        location = locations[0] as? CLLocation
+        self.mapView?.setCenterCoordinate(location!.coordinate, zoomLevel: zoomNumber, animated: true)
+        NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
     }
     
     func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
@@ -216,52 +197,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func takePhoto(sender: AnyObject) {
-        if explained == true {
+        if UserDefaults.defaults.boolForKey(UserDefaults.types.explainationGiven) == true {
             self.showCamera()
         }
         else {
-            explained = true
-            explainerPopUp.setUp("See sometthing fishy? Take a picture to report illegal activity. When you get back to shore, open this app again. That's it... Really.", button: "Got It")
             self.explainerPopUp.hidden = false
             self.view.bringSubviewToFront(self.explainerPopUp)
+            UserDefaults.defaults.setBool(true, forKey: UserDefaults.types.explainationGiven)
         }
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        let chosenImage: UIImage = editingInfo[UIImagePickerControllerOriginalImage] as! UIImage
-        
-        //        self.imageView.image = chosenImage;
-        
-        picker.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        let chosenImage: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
-        //        self.imageView.image = chosenImage;
-        var parameters = [
-            "uploader_id": UIDevice.currentDevice().identifierForVendor.UUIDString
-        ]
-        
-        let urlRequest = urlRequestWithComponents("https://fisharmony.herokuapp.com/api/reports/", parameters: parameters, imageData: imageData)
-        
-        Alamofire.upload(urlRequest.0, urlRequest.1).progress
-            {
-                (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite) in
-            }.response
-            {
-                (request, response, _, error) in
-                println("REQUEST \(request)")
-                println("RESPONSE \(response)")
-                println("ERROR \(error)")
-        }
-        
-        picker.dismissViewControllerAnimated(true, completion: nil)
-    }
     func mapViewDidFailLoadingMap(mapView: MGLMapView!, withError error: NSError!) {
         setViewAsLoading(false)
     }
@@ -274,97 +219,27 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.cameraButton.enabled = true
     }
     
-    func urlRequestWithComponents(urlString:String, parameters:Dictionary<String, String>, imageData:NSData) -> (URLRequestConvertible, NSData) {
-        
-        // create url request to send
-        var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: urlString)!)
-        mutableURLRequest.HTTPMethod = Alamofire.Method.POST.rawValue
-        let boundaryConstant = "myRandomBoundary12345";
-        let contentType = "multipart/form-data;boundary="+boundaryConstant
-        mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
-        
-        
-        
-        // create upload data to send
-        let uploadData = NSMutableData()
-        
-        // add image
-        uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        uploadData.appendData("Content-Disposition: form-data; name=\"file_data\"; filename=\"file_data.jpg\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        uploadData.appendData("Content-Type: image/jpg\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        uploadData.appendData(imageData)
-        
-        // add parameters
-        for (key, value) in parameters {
-            uploadData.appendData("\r\n--\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-            uploadData.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
+    func selectedMenuOption(optionIndex: Int) {
+        waitingToSegue = true
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "gotLocation", name: "gotLocation", object: nil)
+        locationManager.startUpdatingLocation()
+        self.setViewAsLoading(true)
+    }
+    
+    internal func gotLocation() {
+        if waitingToSegue {
+            waitingToSegue = false
+        self.performSegueWithIdentifier("makeReport", sender: self)
+            self.setViewAsLoading(false)
         }
-        uploadData.appendData("\r\n--\(boundaryConstant)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        
-        
-        
-        // return URLRequestConvertible and NSData
-        return (Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0, uploadData)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "makeReport" {
+            (segue.destinationViewController as! ReportViewController).location = location
+        }
     }
     
 }
-
-
-
-
-public enum Router:URLRequestConvertible {
-    case Upload(fieldName: String, fileName: String, mimeType: String, fileContents: NSData, boundaryConstant:String);
-    
-    var method: Alamofire.Method {
-        switch self {
-        case Upload:
-            return .POST
-        default:
-            return .GET
-        }
-    }
-    
-    var path: String {
-        switch self {
-        case Upload:
-            return "/testupload.php"
-        default:
-            return "/"
-        }
-    }
-    
-    public var URLRequest: NSURLRequest {
-        var URL: NSURL = NSURL(string: "https://fisharmony.herokuapp.com/api/reports/")!
-        var mutableURLRequest = NSMutableURLRequest(URL: URL.URLByAppendingPathComponent(path))
-        mutableURLRequest.HTTPMethod = method.rawValue
-        
-        switch self {
-        case .Upload(let fieldName, let fileName, let mimeType, let fileContents, let boundaryConstant):
-            let contentType = "multipart/form-data; boundary=" + boundaryConstant
-            var error: NSError?
-            let boundaryStart = "--\(boundaryConstant)\r\n"
-            let boundaryEnd = "--\(boundaryConstant)--\r\n"
-            let contentDispositionString = "Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(fileName)\"\r\n"
-            let contentTypeString = "Content-Type: \(mimeType)\r\n\r\n"
-            
-            // Prepare the HTTPBody for the request.
-            let requestBodyData : NSMutableData = NSMutableData()
-            requestBodyData.appendData(boundaryStart.dataUsingEncoding(NSUTF8StringEncoding)!)
-            requestBodyData.appendData(contentDispositionString.dataUsingEncoding(NSUTF8StringEncoding)!)
-            requestBodyData.appendData(contentTypeString.dataUsingEncoding(NSUTF8StringEncoding)!)
-            requestBodyData.appendData(fileContents)
-            requestBodyData.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-            requestBodyData.appendData(boundaryEnd.dataUsingEncoding(NSUTF8StringEncoding)!)
-            
-            mutableURLRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
-            mutableURLRequest.HTTPBody = requestBodyData
-            return Alamofire.ParameterEncoding.URL.encode(mutableURLRequest, parameters: nil).0
-            
-        default:
-            return mutableURLRequest
-        }
-    }
-}
-
 
 

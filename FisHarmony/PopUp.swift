@@ -13,7 +13,16 @@ class PopUp: UIView {
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var gotItButton: UIButton!
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     func setUp(text: String, button: String) {
+
         self.layer.cornerRadius = 10.0
         self.gotItButton.layer.cornerRadius = 10.0
         self.textLabel.text = text

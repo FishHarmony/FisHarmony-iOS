@@ -8,17 +8,17 @@
 
 import Foundation
 import SwiftyJSON
+import CoreLocation
 
 class Ship {
     var name: String?
     var id: Int?
     var notes: String?
     var image: UIImage?
-    var lat: String?
-    var lon: String?
+    var location: CLLocationCoordinate2D?
+    var category: String?
     var hasName: Bool = true
     var hasNotes: Bool = true
-    var hasLocation: Bool = true
     
     init(json: JSON) {
         name = json["ship_name"].string
@@ -32,13 +32,19 @@ class Ship {
             hasNotes = false
             notes = ""
         }
-        //        image = json["image"].string
-        image = nil
-        lat = json["geolocation"]["latitude"].string
-        lon = json["geolocation"]["longitude"].string
-        if lon == nil || lat == nil {
-            hasLocation = false
+        let imageString = json["image"].string
+        if imageString != nil {
+            let url = NSURL(string: imageString!)
+            if url != nil {
+                let data = NSData(contentsOfURL: url!)
+                if data != nil {
+                    image = UIImage(data: data!)
+                }
+            }
         }
+        
+        location = CLLocationCoordinate2D(latitude: NSString(string:(json["geolocation"]["latitude"].stringValue)).doubleValue, longitude: NSString(string:(json["geolocation"]["longitude"].stringValue)).doubleValue)
+        category = json["category"].string
     }
     
 }

@@ -9,18 +9,29 @@
 import UIKit
 import MapboxGL
 
-public enum AnnotationType: Int {
-    case Me = 0, OtherShip, InjuredMammel, IllegalActivity
-}
+public let typeDictionary = [
+    "Illegal Fishing"           : 1,
+    "Bycatch"                   : 2,
+    "Endangered Fish Sighting"  : 3,
+    "Injured Mammal"            : 4
+]
+
+public let reverseTypeDictionary = [
+    1:  "Illegal Fishing",
+    2:  "Bycatch",
+    3:  "Endangered Fish Sighting",
+    4:  "Injured Mammal"
+]
+
 
 class MyAnnotation: NSObject, MGLAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title: String!
     var subtitle: String!
-    var type: AnnotationType!
+    var type: Int!
     var tag: Int?
     
-    init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: AnnotationType) {
+    init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: Int) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
@@ -28,20 +39,25 @@ class MyAnnotation: NSObject, MGLAnnotation {
     }
     
     func picture() -> String {
+        var picture = ""
         switch self.type! {
-        case .Me:
-            return "default_marker"
-        case .OtherShip:
-            return "ferry-11"
-        case .InjuredMammel:
-            return "hospital-11"
-        case .IllegalActivity:
-            return "secondary_marker"
+        case typeDictionary["Illegal Fishing"]! :
+            picture = "police-15"
+            break
+        case typeDictionary["Bycatch"]! :
+            picture = "secondary_marker"
+            break
+        case typeDictionary["Endangered Fish Sighting"]! :
+            picture = "secondary_marker"
+            break
+        case typeDictionary["Injured Mammal"]! :
+            picture = "hospital-15"
+            break
         default:
             break
         }
-        return ""
-
+        return picture
+        
     }
     
 }

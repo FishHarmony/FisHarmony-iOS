@@ -21,9 +21,105 @@ class InfoViewController: UITableViewController {
         super.viewDidLoad()
     }
     
+    func setUpInfoCell(tableView: UITableView) -> UITableViewCell? {
+        var cell = tableView.dequeueReusableCellWithIdentifier("infoCell") as? UITableViewCell
+        var shipNameLabel = cell?.viewWithTag(111) as? UILabel
+        var typeLabel = cell?.viewWithTag(222) as? UILabel
+        var locationLabel = cell?.viewWithTag(333) as? UILabel
+        if (shipName != nil) {
+            shipNameLabel?.text = "\(shipName!)"
+        }
+        else {
+            shipNameLabel?.text = "No Ship Name"
+        }
+        if (type != nil) {
+            typeLabel?.text = "\(type!)"
+        }
+        else {
+            typeLabel?.text = "Undefined Report Type"
+        }
+        if (latLon != nil) {
+            locationLabel?.text = "Lat:\(latLon!.latitude) Lon:\(latLon!.longitude)"
+        }
+        else {
+            locationLabel?.text = "No Location Given"
+        }
+        return cell
+
+    }
+    
+    func setUpNotesCell(tableView: UITableView) -> UITableViewCell? {
+        var cell = tableView.dequeueReusableCellWithIdentifier("notesCell") as? UITableViewCell
+        var notesView = cell?.viewWithTag(444) as? UITextView
+        
+        if (notes != nil) {
+            notesView?.text = "\(notes!)"
+        }
+        else {
+            notesView?.text = "No notes..."
+        }
+        return cell
+        
+    }
+    
+    func setUpImageCell(tableView: UITableView) -> UITableViewCell? {
+        var cell = tableView.dequeueReusableCellWithIdentifier("imageCell") as? UITableViewCell
+        var imageView = cell?.viewWithTag(10) as? UIImageView
+        
+        if image != nil {
+            imageView?.image = image!
+        }
+        return cell
+    }
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
-        return cell
+        var imageView: UIImageView?
+        var notesView: UITextView?
+        var shipNameLabel: UILabel?
+        var locationLabel: UILabel?
+        var typeLabel: UILabel?
+
+
+        if self.image == nil {
+            if self.notes == nil {
+                cell = setUpInfoCell(tableView)
+            }
+            else {
+                if indexPath.row == 0 {
+                    cell = setUpInfoCell(tableView)
+                }
+                else {
+                    cell = setUpNotesCell(tableView)
+
+                }
+            }
+        }
+        else if self.notes == nil {
+            if indexPath.row == 0 {
+                cell = setUpImageCell(tableView)
+            }
+            else {
+                cell = setUpInfoCell(tableView)
+
+            }
+        }
+        else {
+            if indexPath.row == 0 {
+                cell = setUpImageCell(tableView)
+
+            }
+            else if indexPath.row == 1 {
+                cell = setUpInfoCell(tableView)
+
+            }
+            else {
+                cell = setUpNotesCell(tableView)
+            }
+        }
+        cell?.selectionStyle = UITableViewCellSelectionStyle.None
+
+        return cell!
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -77,4 +173,7 @@ class InfoViewController: UITableViewController {
         return 1
     }
 
+    @IBAction func back(sender: AnyObject) {
+        self.navigationController?.popViewControllerAnimated(true)
+    }
 }

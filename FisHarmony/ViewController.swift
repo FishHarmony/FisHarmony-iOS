@@ -36,26 +36,33 @@ protocol ViewControllerDelegate {
 
 class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDelegate, MenuViewControllerActionDelegate {
     @IBOutlet weak var progressView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var explainerPopUp: PopUp!
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     private var locationManager: CLLocationManager = CLLocationManager()
     private var direction: CLLocationDirection = 0.0
     private var mapView: MGLMapView?
-    private var zoomNumber: Double = 16
+    private var zoomNumber: Double = 15
     private var location: CLLocation?
     private var selectedIndex: Int?
     private var zoomDirection: Int = -1
     var delegate: ViewControllerDelegate?
     private var waitingToSegue: Bool = false
+    private var requestedLocationPlacement: Bool = false
+    private var annotation: MyAnnotation?
     
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         return (annotation as! MyAnnotation).picture()
     }
     
-    func mapView(mapView: MGLMapView!, didSelectAnnotation annotation: MGLAnnotation!) {
-        
+    func mapView(mapView: MGLMapView!, rightCalloutAccessoryViewForAnnotation annotation: MGLAnnotation!) -> UIView! {
+        var button: UIButton = UIButton.buttonWithType(UIButtonType.InfoLight) as! UIButton
+        return button
+    }
+    
+    func mapView(mapView: MGLMapView!, annotation: MGLAnnotation!, calloutAccessoryControlTapped control: UIControl!) {
+        self.annotation = annotation as? MyAnnotation
+        self.performSegueWithIdentifier("showDetails", sender: self)
     }
     
     override func viewDidLoad() {
@@ -69,7 +76,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestAlwaysAuthorization()
-        self.locationManager.startUpdatingHeading()
         self.locationManager.startMonitoringSignificantLocationChanges()
         self.mapView!.delegate = self
         let gr = UITapGestureRecognizer(target: self, action: "zoom:")
@@ -78,7 +84,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         self.mapView?.showsUserLocation = true
         self.view.addSubview(self.mapView!)
-        findShips()
+        self.refresh(self)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -101,20 +107,29 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
             zoomDirection = 1
             zoomNumber++
         }
-        else if z <= 16 { // z = 1-16 -> 0-15
+        else if z <= 15 { // z = 1-16 -> 0-15
             if zoomDirection == -1 {
                 zoomNumber--
             }
             else if zoomDirection == 1 {
                 zoomNumber++
             }
-            if zoomNumber == 16 {
+            if zoomNumber == 15 {
                 zoomDirection = -1
             }
         }
         
-        mapView?.setCenterCoordinate(center!, zoomLevel: zoomNumber, animated: true)
+        mapView?.setCenterCoordinate(mapView!.userLocation.coordinate, zoomLevel: zoomNumber, animated: true)
         setViewAsLoading(false)
+    }
+    
+    func mapView(mapView: MGLMapView!, didUpdateUserLocation userLocation: MGLUserLocation!) {
+        if requestedLocationPlacement {
+            location = mapView.userLocation.location
+        mapView?.setCenterCoordinate(mapView!.userLocation.coordinate, zoomLevel: 15, animated: true)
+            requestedLocationPlacement = false
+        }
+        NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
     }
     
     func findShips() {
@@ -123,7 +138,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         request.responseJSON() {
             (_, _, data, err) in
             if err == nil {
-                
                 var json = JSON(data!)
                 var ships: NSMutableArray = NSMutableArray()
                 for var i = 0; i<json.count; i++ {
@@ -137,7 +151,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
                         // Add marker `ellipse` to the map
                         
                         self.mapView!.addAnnotation(ellipse)
-                        self.mapView?.setCenterCoordinate(ship.location!, zoomLevel: 18, animated: true)
                     }
                     else {
                         // error
@@ -147,6 +160,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
             else {
                 
             }
+            self.mapView?.setCenterCoordinate(self.location!.coordinate, zoomLevel: self.zoomNumber, animated: true)
             self.setViewAsLoading(false)
         }
         
@@ -171,14 +185,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         if newLocation.coordinate.latitude != oldLocation.coordinate.latitude {
             location = CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude)
-            NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
         }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         location = locations[0] as? CLLocation
-        self.mapView?.setCenterCoordinate(location!.coordinate, zoomLevel: zoomNumber, animated: true)
-        NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
     }
     
     func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
@@ -201,6 +212,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.stopUpdatingLocation()
         // Dispose of any resources that can be recreated.
     }
     
@@ -230,7 +243,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     func selectedMenuOption(optionIndex: Int) {
         waitingToSegue = true
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gotLocation", name: "gotLocation", object: nil)
-        locationManager.startUpdatingLocation()
+        requestedLocationPlacement = true
         selectedIndex = optionIndex
         self.setViewAsLoading(true)
     }
@@ -249,8 +262,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
             (segue.destinationViewController as! ReportViewController).type = reverseTypeDictionary[selectedIndex!]
             (segue.destinationViewController as! ReportViewController).locationManager = locationManager
         }
+        else if segue.identifier == "showDetails" {
+            (segue.destinationViewController as! InfoViewController).notes = annotation?.subtitle
+            (segue.destinationViewController as! InfoViewController).shipName = annotation?.title
+            (segue.destinationViewController as! InfoViewController).latLon = annotation?.coordinate
+            (segue.destinationViewController as! InfoViewController).image = annotation?.image
+            (segue.destinationViewController as! InfoViewController).type = reverseTypeDictionary[annotation!.type]
+        }
     }
     
+    @IBAction func refresh(sender: AnyObject) {
+        requestedLocationPlacement = true
+        findShips()
+    }
 }
 
 

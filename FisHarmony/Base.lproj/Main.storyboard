@@ -17,9 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dgC-5B-4Aq">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="brG-Fo-L9j" customClass="PopUp" customModule="FisHarmony" customModuleProvider="target">
                                 <rect key="frame" x="150" y="150" width="300" height="300"/>
                                 <subviews>
@@ -86,23 +83,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="dgC-5B-4Aq" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="3B7-v3-ddY"/>
                             <constraint firstAttribute="centerY" secondItem="brG-Fo-L9j" secondAttribute="centerY" id="5lK-Vz-whF"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="dgC-5B-4Aq" secondAttribute="trailing" constant="-16" id="AKD-hX-doA"/>
                             <constraint firstAttribute="centerY" secondItem="Qpj-qp-Agg" secondAttribute="centerY" id="O2v-wt-U4S"/>
-                            <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="R2j-RS-lfB"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="dgC-5B-4Aq" secondAttribute="bottom" id="YAd-oy-eyU"/>
                             <constraint firstAttribute="centerX" secondItem="brG-Fo-L9j" secondAttribute="centerX" id="dNA-Sq-qGJ"/>
                             <constraint firstAttribute="centerX" secondItem="Qpj-qp-Agg" secondAttribute="centerX" id="oMy-nG-OKA"/>
-                            <constraint firstItem="dgC-5B-4Aq" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="omC-hM-cVc"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="omC-hM-cVc"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="FisHarmony" id="cg5-Zc-Isl">
+                        <barButtonItem key="leftBarButtonItem" title="Refresh" id="gFJ-X4-516">
+                            <connections>
+                                <action selector="refresh:" destination="BYZ-38-t0r" id="xyY-mU-ZLo"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="camera" id="F4G-zH-3Rs">
                             <color key="tintColor" red="0.52549019607843139" green="0.72156862745098038" blue="0.69411764705882351" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -113,20 +105,20 @@
                     <connections>
                         <outlet property="cameraButton" destination="F4G-zH-3Rs" id="qX3-VJ-Ixq"/>
                         <outlet property="explainerPopUp" destination="brG-Fo-L9j" id="LqD-AA-j86"/>
-                        <outlet property="imageView" destination="dgC-5B-4Aq" id="2ca-Vr-RsL"/>
                         <outlet property="navItem" destination="cg5-Zc-Isl" id="WB8-HK-7bB"/>
                         <outlet property="progressView" destination="Qpj-qp-Agg" id="1pq-Ss-28x"/>
                         <segue destination="psI-fZ-DSB" kind="show" identifier="makeReport" id="4Nh-kn-Tzh"/>
+                        <segue destination="RY7-49-exC" kind="show" identifier="showDetails" id="pTz-X8-7Jb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1276" y="316"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Report Information-->
         <scene sceneID="dmY-f8-M64">
             <objects>
-                <tableViewController id="RY7-49-exC" sceneMemberID="viewController">
+                <tableViewController id="RY7-49-exC" customClass="InfoViewController" customModule="FisHarmony" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0YV-Ct-Vg5">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -210,10 +202,19 @@
                             <outlet property="delegate" destination="RY7-49-exC" id="Xf7-F6-fAh"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Report Information" id="hJs-cY-MuJ">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="1Gq-Y9-lXh">
+                            <connections>
+                                <action selector="back:" destination="RY7-49-exC" id="G1H-Jp-MV4"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UD0-Kq-Iat" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1387" y="956"/>
+            <point key="canvasLocation" x="1368" y="1081"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="ZlB-tp-UUU">

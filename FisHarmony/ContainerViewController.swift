@@ -36,7 +36,7 @@ class ContainerViewController: UIViewController, ViewControllerDelegate, MenuVie
         centerNavigationController.navigationBar.translucent = true
         centerNavigationController.navigationBar.barStyle = UIBarStyle.Black
         centerNavigationController.navigationBar.backgroundColor = UIColor.blackColor()
-        centerNavigationController.navigationBar.tintColor = UIColor.blackColor()
+        centerNavigationController.navigationBar.tintColor = UIColor.whiteColor()
         view.addSubview(centerNavigationController.view)
         addChildViewController(centerNavigationController)
         addRightPanelViewController()

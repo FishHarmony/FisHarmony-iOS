@@ -25,12 +25,12 @@ public let reverseTypeDictionary = [
 
 
 class MyAnnotation: NSObject, MGLAnnotation {
-    var coordinate: CLLocationCoordinate2D
-    var title: String!
-    var subtitle: String!
-    var type: Int!
+    internal var coordinate: CLLocationCoordinate2D
+    internal var title: String!
+    internal var subtitle: String!
+  internal var type: Int!
     var tag: Int?
-    var image: UIImage?
+    internal var image: UIImage?
     
     init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: Int, image: UIImage?) {
         self.coordinate = coordinate

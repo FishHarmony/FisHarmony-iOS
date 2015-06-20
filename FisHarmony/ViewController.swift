@@ -45,12 +45,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     private var mapView: MGLMapView?
     private var zoomNumber: Double = 16
     private var location: CLLocation?
+    private var selectedIndex: Int?
     private var zoomDirection: Int = -1
     var delegate: ViewControllerDelegate?
     private var waitingToSegue: Bool = false
     
     func mapView(mapView: MGLMapView!, symbolNameForAnnotation annotation: MGLAnnotation!) -> String! {
         return (annotation as! MyAnnotation).picture()
+    }
+    
+    func mapView(mapView: MGLMapView!, didSelectAnnotation annotation: MGLAnnotation!) {
+        
     }
     
     override func viewDidLoad() {
@@ -64,6 +69,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingHeading()
         self.locationManager.startMonitoringSignificantLocationChanges()
         self.mapView!.delegate = self
         let gr = UITapGestureRecognizer(target: self, action: "zoom:")
@@ -72,12 +78,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         self.mapView!.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         self.mapView?.showsUserLocation = true
         self.view.addSubview(self.mapView!)
-        
+        findShips()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        locationManager.delegate = self
     }
     
     func setViewAsLoading(should: Bool) {
@@ -125,12 +131,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
                     ships.addObject(ship)
                     if (ship.location != nil) {
                         var annotationType: Int = typeDictionary[ship.category!]!
-                        let ellipse = MyAnnotation(location: CLLocationCoordinate2D(latitude: self.locationManager.location.coordinate.latitude, longitude: self.locationManager.location.coordinate.longitude),
-                            title: ship.name!, subtitle: ship.notes!, type: annotationType)
-                        
+
+                        let ellipse = MyAnnotation(location: ship.location!,
+                            title: ship.name!, subtitle: ship.notes!, type: annotationType, image: ship.image)
                         // Add marker `ellipse` to the map
                         
                         self.mapView!.addAnnotation(ellipse)
+                        self.mapView?.setCenterCoordinate(ship.location!, zoomLevel: 18, animated: true)
                     }
                     else {
                         // error
@@ -140,6 +147,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
             else {
                 
             }
+            self.setViewAsLoading(false)
         }
         
     }
@@ -223,6 +231,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         waitingToSegue = true
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gotLocation", name: "gotLocation", object: nil)
         locationManager.startUpdatingLocation()
+        selectedIndex = optionIndex
         self.setViewAsLoading(true)
     }
     
@@ -237,6 +246,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "makeReport" {
             (segue.destinationViewController as! ReportViewController).location = location
+            (segue.destinationViewController as! ReportViewController).type = reverseTypeDictionary[selectedIndex!]
+            (segue.destinationViewController as! ReportViewController).locationManager = locationManager
         }
     }
     

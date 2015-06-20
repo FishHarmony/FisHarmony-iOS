@@ -9,8 +9,9 @@
 import UIKit
 import CoreLocation
 import Alamofire
+import AssetsLibrary
 
-class ReportViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIAlertViewDelegate {
+class ReportViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, UIAlertViewDelegate, CLLocationManagerDelegate {
     var type: String?
     private var notes: String?
     var location: CLLocation?
@@ -26,14 +27,43 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
     private var urlRequest: (URLRequestConvertible, NSData)?
     private var parameters: [String: String]?
     private var imageData: NSData?
+    var locationManager: CLLocationManager?
+    private var requestedHeading: Bool = false
+
     
     override func viewDidLoad() {
         clearedPlaceHolder = false
+        navItem.title = type!
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         self.tableView.backgroundColor = UIColor.whiteColor()
         imagePickerController = UIImagePickerController()
         imagePickerController!.delegate = self
         imagePickerController!.allowsEditing = false
+        
+        self.locationManager!.delegate = self
+        self.locationManager!.desiredAccuracy = kCLLocationAccuracyBest
+        switch UIDevice.currentDevice().orientation{
+        case .Portrait:
+            self.locationManager!.headingOrientation = CLDeviceOrientation.Portrait
+            break
+            
+        case .PortraitUpsideDown:
+            self.locationManager!.headingOrientation = CLDeviceOrientation.PortraitUpsideDown
+            break
+            
+        case .LandscapeLeft:
+            self.locationManager!.headingOrientation = CLDeviceOrientation.LandscapeLeft
+            break
+            
+        case .LandscapeRight:
+            self.locationManager!.headingOrientation = CLDeviceOrientation.LandscapeRight
+            break
+            
+        default:
+            break
+        }
+        
+        self.locationManager!.headingFilter = kCLHeadingFilterNone
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -76,8 +106,8 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
                 if notes == nil {
                     notes = ""
                 }
-                self.sendButton.enabled = false
-                self.sendButton.backgroundColor = UIColor.grayColor()
+                self.sendButton.enabled = true
+                self.sendButton.backgroundColor = UIColor(red: 48/255, green: 196/255, blue: 201/255, alpha: 1.0)
             }
             break
         default:
@@ -208,7 +238,8 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
         else {
             imagePickerController!.sourceType = UIImagePickerControllerSourceType.Camera
         }
-        self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
+        requestedHeading = true
+        self.locationManager!.startUpdatingHeading()
     }
     
     func chosePicture() {
@@ -218,7 +249,21 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
         else {
             imagePickerController!.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         }
+        requestedHeading = true
+        self.locationManager!.startUpdatingHeading()
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!) {
+        self.direction = newHeading.trueHeading
+        if requestedHeading == true {
         self.presentViewController(imagePickerController!, animated: true, completion:{() -> Void in })
+            requestedHeading = false
+        }
+        manager.stopUpdatingHeading()
+    }
+    
+    func locationManagerShouldDisplayHeadingCalibration(manager: CLLocationManager!) -> Bool {
+        return true
     }
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
@@ -247,21 +292,29 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         self.chosenImage = info[UIImagePickerControllerOriginalImage] as? UIImage
+
         picker.dismissViewControllerAnimated(true, completion: nil)
         self.tableView.reloadData()
     }
     
     func makeRequest() {
         self.imageData = UIImageJPEGRepresentation(chosenImage, 1.0)
-        let picture = Picture(name: "", coordinates: location?.coordinate, type: typeDictionary["Illegal Fishing"], image: chosenImage)
+        let picture = Picture(name: "", coordinates: location?.coordinate, type: typeDictionary[type!], image: chosenImage)
         //        self.imageView.image = chosenImage;
-        
+        var dir: String?
+        if self.direction == nil {
+            dir = ""
+        }
+        else {
+            dir = "\(self.direction!)"
+        }
         self.parameters = [
             "report_category_id"    : "\(picture.reportingType!)",
             "latitude"              : "\(picture.coordinates!.latitude)",
             "longitude"             : "\(picture.coordinates!.longitude)",
             "notes"                 : "\(notes!)",
-            "uploader_id"           : UIDevice.currentDevice().identifierForVendor.UUIDString
+            "uploader_id"           : UIDevice.currentDevice().identifierForVendor.UUIDString,
+            "direction"             : dir!
         ]
         
         //        var report: [String: [String: String]] = ["report": parameters]

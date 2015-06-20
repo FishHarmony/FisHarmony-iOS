@@ -30,12 +30,14 @@ class MyAnnotation: NSObject, MGLAnnotation {
     var subtitle: String!
     var type: Int!
     var tag: Int?
+    var image: UIImage?
     
-    init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: Int) {
+    init(location coordinate: CLLocationCoordinate2D, title: String, subtitle: String, type: Int, image: UIImage?) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
         self.type = type
+        self.image = image
     }
     
     func picture() -> String {

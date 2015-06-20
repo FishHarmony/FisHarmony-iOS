@@ -10,10 +10,12 @@
 		7322FD9F0FF9ECA40E7C396C /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		BA0CD08D1B244F1600B14964 /* MyAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */; };
 		BA0CD08F1B2458AC00B14964 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = BA0CD08E1B2458AC00B14964 /* Settings.bundle */; };
+		BA1048511B35526000ED40A3 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1048501B35526000ED40A3 /* InfoViewController.swift */; };
 		BA1ACA0D1B2E213E004228E0 /* Stuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA1ACA0C1B2E213E004228E0 /* Stuff.swift */; };
 		BA6902C51B2E435B00CB2ED7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6902C41B2E435B00CB2ED7 /* MenuViewController.swift */; };
 		BA6902C71B2E5DEC00CB2ED7 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6902C61B2E5DEC00CB2ED7 /* ContainerViewController.swift */; };
 		BAAE148E1B23DB4600F0449D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAAE148D1B23DB4600F0449D /* Foundation.framework */; };
+		BAC005AD1B35347B00C3477F /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC005AC1B35347B00C3477F /* AssetsLibrary.framework */; };
 		BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558231B22A17900389A9D /* AppDelegate.swift */; };
 		BAD558261B22A17900389A9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD558251B22A17900389A9D /* ViewController.swift */; };
 		BAD558291B22A17900389A9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAD558271B22A17900389A9D /* Main.storyboard */; };
@@ -41,10 +43,12 @@
 		A63D10D036A91E862BA0DCD8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BA0CD08C1B244F1600B14964 /* MyAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyAnnotation.swift; sourceTree = "<group>"; };
 		BA0CD08E1B2458AC00B14964 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		BA1048501B35526000ED40A3 /* InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		BA1ACA0C1B2E213E004228E0 /* Stuff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stuff.swift; sourceTree = "<group>"; };
 		BA6902C41B2E435B00CB2ED7 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		BA6902C61B2E5DEC00CB2ED7 /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		BAAE148D1B23DB4600F0449D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		BAC005AC1B35347B00C3477F /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		BAD5581E1B22A17900389A9D /* FisHarmony.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FisHarmony.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAD558221B22A17900389A9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BAD558231B22A17900389A9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -67,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAC005AD1B35347B00C3477F /* AssetsLibrary.framework in Frameworks */,
 				BAAE148E1B23DB4600F0449D /* Foundation.framework in Frameworks */,
 				7322FD9F0FF9ECA40E7C396C /* Pods.framework in Frameworks */,
 			);
@@ -128,6 +133,7 @@
 				BA6902C41B2E435B00CB2ED7 /* MenuViewController.swift */,
 				BA6902C61B2E5DEC00CB2ED7 /* ContainerViewController.swift */,
 				BAFE7CE31B3249CC008F2437 /* ReportViewController.swift */,
+				BA1048501B35526000ED40A3 /* InfoViewController.swift */,
 			);
 			path = FisHarmony;
 			sourceTree = "<group>";
@@ -161,6 +167,7 @@
 		BDCEB0B753E5ECA8A706BB43 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BAC005AC1B35347B00C3477F /* AssetsLibrary.framework */,
 				BAAE148D1B23DB4600F0449D /* Foundation.framework */,
 				C1AFD68ACC3BE27EE4B7F19D /* Pods.framework */,
 			);
@@ -321,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BAECA44E1B2A5884006C8CAE /* Picture.swift in Sources */,
+				BA1048511B35526000ED40A3 /* InfoViewController.swift in Sources */,
 				BA6902C51B2E435B00CB2ED7 /* MenuViewController.swift in Sources */,
 				BAD558261B22A17900389A9D /* ViewController.swift in Sources */,
 				BAD558241B22A17900389A9D /* AppDelegate.swift in Sources */,

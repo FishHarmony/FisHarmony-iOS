@@ -186,10 +186,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
         if newLocation.coordinate.latitude != oldLocation.coordinate.latitude {
             location = CLLocation(latitude: newLocation.coordinate.latitude, longitude: newLocation.coordinate.longitude)
         }
+        NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
+
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         location = locations[0] as? CLLocation
+        NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)
+
     }
     
     func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {

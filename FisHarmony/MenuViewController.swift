@@ -89,7 +89,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let translation = sender.translationInView(self.view)
         let newPos = CGPoint(x:sender.view!.center.x + translation.x, y:self.view.center.y)
         var maxX: CGFloat = 300
-        if IS_IPAD {
+        if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
             maxX = 500
         }
         switch sender.state {

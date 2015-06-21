@@ -58,6 +58,9 @@ class InfoViewController: UITableViewController {
         else {
             notesView?.text = "No notes..."
         }
+        notesView?.layer.borderColor = UIColor(red: 48/255, green: 196/255, blue: 201/255, alpha: 1.0).CGColor
+        notesView?.layer.borderWidth = 0.5
+        notesView?.layer.cornerRadius = 5.0
         return cell
         
     }

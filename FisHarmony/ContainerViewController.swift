@@ -128,7 +128,7 @@ private extension UIStoryboard {
     
     class func rightViewController() -> MenuViewController? {
         var id = "Menu"
-        if IS_IPAD {
+        if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
             id = "MenuiPad"
         }
         return mainStoryboard().instantiateViewControllerWithIdentifier(id) as? MenuViewController

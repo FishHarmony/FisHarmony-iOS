@@ -67,6 +67,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        location = CLLocation(latitude: 33.7717, longitude: -118.1934)
         setViewAsLoading(true)
         self.explainerPopUp.setUp("Take a picture to report illegal activity. This is completely anonymous. When you have signal, we'll send the report for you. That's it... Really", button: "Got It")
         self.explainerPopUp.hidden = true
@@ -119,14 +120,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MGLMapViewDel
             }
         }
         
-        mapView?.setCenterCoordinate(mapView!.userLocation.coordinate, zoomLevel: zoomNumber, animated: true)
+        mapView?.setCenterCoordinate(self.location!.coordinate, zoomLevel: zoomNumber, animated: true)
         setViewAsLoading(false)
     }
     
     func mapView(mapView: MGLMapView!, didUpdateUserLocation userLocation: MGLUserLocation!) {
+        location = mapView.userLocation.location
         if requestedLocationPlacement {
-            location = mapView.userLocation.location
-        mapView?.setCenterCoordinate(mapView!.userLocation.coordinate, zoomLevel: 15, animated: true)
+        mapView?.setCenterCoordinate(self.location!.coordinate, zoomLevel: 15, animated: true)
             requestedLocationPlacement = false
         }
         NSNotificationCenter.defaultCenter().postNotificationName("gotLocation", object: nil)

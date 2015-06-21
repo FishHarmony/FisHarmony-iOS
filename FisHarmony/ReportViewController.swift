@@ -141,17 +141,17 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            if IS_IPAD {
+            if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
                 return 80
             }
             return 50
         case 1:
-            if IS_IPAD {
+            if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
                 return 500
             }
             return 210
         case 2:
-            if IS_IPAD {
+            if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
                 return 80
             }
             return 50
@@ -162,7 +162,7 @@ class ReportViewController: UITableViewController, UIImagePickerControllerDelega
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if IS_IPAD {
+        if NSString(string: UIDevice.currentDevice().modelName).substringToIndex(4) == "iPad" {
             return 50
         }
         else {
